@@ -1,3 +1,5 @@
+# CSA - 1747 ARTIFICIAL INTELLIGENCE 
+
 1.Write the python program to solve 8-Puzzle problem
 
 2.Write the python program to solve 8-Queen problem
