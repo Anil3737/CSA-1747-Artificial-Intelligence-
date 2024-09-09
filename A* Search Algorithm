@@ -1,0 +1,79 @@
+import heapq
+
+class Node:
+    def __init__(self, position, g=0, h=0, parent=None):
+        self.position = position  # Position of the node in the graph
+        self.g = g  # Cost from start to current node
+        self.h = h  # Estimated cost from current node to goal
+        self.f = g + h  # Total cost (g + h)
+        self.parent = parent  # Parent node
+
+    def __lt__(self, other):
+        return self.f < other.f
+
+def a_star_search(graph, start, goal, heuristic):
+    open_list = []
+    closed_list = set()
+
+    start_node = Node(start, g=0, h=heuristic[start])
+    heapq.heappush(open_list, start_node)
+
+    while open_list:
+        current_node = heapq.heappop(open_list)
+
+        # If goal is reached, reconstruct the path
+        if current_node.position == goal:
+            path = []
+            while current_node:
+                path.append(current_node.position)
+                current_node = current_node.parent
+            return path[::-1]
+
+        closed_list.add(current_node.position)
+
+        # Explore neighbors
+        for neighbor, cost in graph[current_node.position].items():
+            if neighbor in closed_list:
+                continue
+
+            g = current_node.g + cost
+            h = heuristic[neighbor]
+            neighbor_node = Node(neighbor, g, h, current_node)
+
+            # Check if neighbor is in the open list and has a higher cost
+            for open_node in open_list:
+                if open_node.position == neighbor and open_node.g <= g:
+                    break
+            else:
+                heapq.heappush(open_list, neighbor_node)
+
+    return None  # Path not found
+
+# Example graph represented as an adjacency list
+graph = {
+    'A': {'B': 1, 'C': 4},
+    'B': {'A': 1, 'D': 2, 'E': 5},
+    'C': {'A': 4, 'F': 3},
+    'D': {'B': 2, 'E': 1},
+    'E': {'B': 5, 'D': 1, 'G': 2},
+    'F': {'C': 3, 'G': 1},
+    'G': {'E': 2, 'F': 1}
+}
+
+# Example heuristic values (estimated cost from each node to the goal)
+heuristic = {
+    'A': 7,
+    'B': 6,
+    'C': 2,
+    'D': 4,
+    'E': 3,
+    'F': 1,
+    'G': 0  # Goal node
+}
+
+# Run A* search from node 'A' to node 'G'
+start_node = 'A'
+goal_node = 'G'
+path = a_star_search(graph, start_node, goal_node, heuristic)
+
+print("Path found:", path)
