@@ -1,0 +1,18 @@
+% Define the fruits and their colors
+fruit_color(apple, red).
+fruit_color(banana, yellow).
+fruit_color(grape, purple).
+fruit_color(orange, orange).
+fruit_color(pineapple, yellow).
+% Define more fruits and colors
+
+% Query to find the color of a fruit using backtracking
+find_color(Fruit, Color) :-
+    fruit_color(Fruit, Color).
+
+% Example usage
+:- writeln("Welcome to the Fruit Color Finder!"),
+   writeln("Please enter the name of a fruit:"),
+   read(Fruit),
+   find_color(Fruit, Color),
+   format("The color of ~w is ~w.~n", [Fruit, Color]).
