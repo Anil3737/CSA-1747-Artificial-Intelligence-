@@ -1,0 +1,29 @@
+% Facts about foods and their properties
+food_properties(apple, [low_carb, high_fiber, no_added_sugar]).
+food_properties(banana, [moderate_carb, high_potassium]).
+food_properties(spinach, [low_carb, low_sodium, high_fiber]).
+food_properties(salmon, [high_protein, omega_3_fatty_acids]).
+% Define more food properties
+
+% Diet recommendations for diseases
+diet_recommendation(diabetes, [low_carb, high_fiber, no_added_sugar]).
+diet_recommendation(hypertension, [low_sodium, high_potassium]).
+% Define more disease diet recommendations
+
+% Predicates to check if a food fits a diet
+food_fits_diet(Food, Diet) :-
+    food_properties(Food, Properties),
+    diet_recommendation(Diet, DietProperties),
+    forall(member(Property, DietProperties), member(Property, Properties)).
+
+% Predicates to suggest a diet based on a disease
+suggest_diet(Disease, RecommendedFoods) :-
+    findall(Food, food_fits_diet(Food, Disease), RecommendedFoods).
+
+% Example usage
+:- writeln("Welcome to the Diet Recommendation System!"),
+   writeln("Please enter the disease (diabetes or hypertension):"),
+   read(Disease),
+   suggest_diet(Disease, RecommendedFoods),
+   writeln("Recommended foods for the given disease:"),
+   writeln(RecommendedFoods).
