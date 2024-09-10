@@ -1,0 +1,59 @@
+% Define animal characteristics
+has_fur(dog).
+has_fur(cat).
+has_feathers(bird).
+has_scales(fish).
+
+% Define rules
+mammal(X) :- has_fur(X).
+bird(X) :- has_feathers(X).
+reptile(X) :- has_scales(X).
+
+% Ask user about characteristics
+ask_characteristics :-
+    writeln("Welcome to the Animal Expert System!"),
+    writeln("Answer the following questions with 'yes' or 'no'."),
+    ask_mammal,
+    ask_bird,
+    ask_reptile.
+
+ask_mammal :-
+    write("Does the animal have fur? "),
+    read(Response),
+    (Response = yes ->
+        assert(has_fur(user_defined));
+        true
+    ).
+
+ask_bird :-
+    write("Does the animal have feathers? "),
+    read(Response),
+    (Response = yes ->
+        assert(has_feathers(user_defined));
+        true
+    ).
+
+ask_reptile :-
+    write("Does the animal have scales? "),
+    read(Response),
+    (Response = yes ->
+        assert(has_scales(user_defined));
+        true
+    ).
+
+% Infer the type of animal
+infer_animal :-
+    (mammal(X) -> writeln(X is a mammal); true),
+    (bird(X) -> writeln(X is a bird); true),
+    (reptile(X) -> writeln(X is a reptile); true).
+
+% Main predicate
+main :-
+    ask_characteristics,
+    infer_animal,
+    retract(has_fur(user_defined)),
+    retract(has_feathers(user_defined)),
+    retract(has_scales(user_defined)).
+
+% Example usage
+:- main.
