@@ -1,0 +1,39 @@
+initial_state(state(at_door, on_floor, at_center, on_ceiling)).
+final_state(state(_, _, _, has_banana)).
+action(walk(State1, State2)) :-
+    can_walk(State1, State2).
+action(climb(State1, State2)) :-
+    can_climb(State1, State2).
+action(grasp(State1, State2)) :-
+    can_grasp(State1, State2).
+can_walk(state(at_door, on_floor, L, H), state(at_center, on_floor, L, H)).
+can_walk(state(at_center, on_floor, L, H), state(at_door, on_floor, L, H)).
+can_walk(state(at_center, on_floor, L, H), state(at_center, on_floor, L, H)).
+
+can_climb(state(M, on_floor, L, H), state(M, on_box, L, H)).
+
+can_grasp(state(M, on_box, M, on_ceiling), state(M, on_box, M, has_banana)).
+
+dfs(State, _, []) :-
+    final_state(State).
+
+dfs(State, Visited, [Action | Actions]) :-
+    action(Action),
+    apply_action(State, Action, NewState),
+    \+ member(NewState, Visited),
+    dfs(NewState, [NewState | Visited], Actions).
+
+apply_action(State, walk(State, NewState), NewState).
+apply_action(State, climb(State, NewState), NewState).
+apply_action(State, grasp(State, NewState), NewState).
+
+solve(Plan) :-
+    initial_state(InitialState),
+    dfs(InitialState, [InitialState], Plan).
+
+print_solution([]).
+print_solution([Action | Rest]) :-
+    writeln(Action),
+    print_solution(Rest).
+
+:- solve(Plan), print_solution(Plan).
